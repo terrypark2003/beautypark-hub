@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#F5EFE6">
+<title>뷰티파크 허브 · Beauty Park Hub</title>
+<meta name="description" content="뷰티파크 의원 범어점 운영 통합 포털 - 매출, CRM, 급여, 재고 등 모든 시스템 한 곳에서">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%23FDFCF8' stroke='%23B8A07A' stroke-width='2'/%3E%3Ctext x='50' y='66' text-anchor='middle' font-family='Georgia,serif' font-size='42' font-weight='600' fill='%234A4138'%3EBP%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #F5EFE6;
+    --cream-deep: #EDE5D5;
+    --taupe: #6E6256;
+    --taupe-dark: #4A4138;
+    --taupe-soft: #8B7F71;
+    --gold: #B8A07A;
+    --gold-light: #D4BE9A;
+    --rose: #C9A89A;
+    --sage: #A8B5A0;
+    --ink: #2B2520;
+    --white: #FDFCF8;
+    --line: rgba(110, 98, 86, 0.18);
+    --shadow: rgba(74, 65, 56, 0.3);
+    --card-shadow: 0 18px 40px -16px rgba(74, 65, 56, 0.3);
+  }
+  [data-theme="dark"] {
+    --cream: #1B1916;
+    --cream-deep: #232019;
+    --taupe: #B6AB9B;
+    --taupe-dark: #E7DECE;
+    --taupe-soft: #8E8473;
+    --gold: #CBB489;
+    --gold-light: #DBC59E;
+    --rose: #C9A89A;
+    --sage: #A8B5A0;
+    --ink: #ECE6DB;
+    --white: #26231E;
+    --line: rgba(220, 210, 190, 0.13);
+    --shadow: rgba(0, 0, 0, 0.55);
+    --card-shadow: 0 18px 40px -16px rgba(0, 0, 0, 0.6);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Noto Sans KR', sans-serif;
+    min-height: 100vh;
+    padding: 32px 24px 60px;
+    transition: background 0.4s ease, color 0.4s ease;
+  }
+  .wrap { max-width: 1200px; margin: 0 auto; }
+
+  /* EMBLEM */
+  .emblem { border-radius: 50%; display: block; }
+
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 28px;
+    background: var(--white);
+    border-radius: 16px;
+    border: 1px solid var(--line);
+    margin-bottom: 20px;
+    transition: background 0.4s ease, border-color 0.4s ease;
+  }
+  .header-left { display: flex; align-items: center; gap: 18px; }
+  .header-logo { width: 52px; height: 52px; }
+  .header-title { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 600; color: var(--taupe-dark); letter-spacing: 0.04em; }
+  .header-sub { font-size: 12px; color: var(--taupe-soft); letter-spacing: 0.15em; margin-top: 2px; }
+  .header-right { display: flex; align-items: center; gap: 14px; }
+  .clock { font-family: 'Cormorant Garamond', serif; font-size: 18px; color: var(--taupe-dark); text-align: right; }
+  .clock-date { font-size: 11px; color: var(--taupe-soft); letter-spacing: 0.1em; }
+  .icon-btn { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--line); background: var(--cream); color: var(--taupe-dark); cursor: pointer; font-size: 17px; display: flex; align-items: center; justify-content: center; transition: all 0.25s ease; font-family: inherit; }
+  .icon-btn:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-1px); }
+
+  /* DASHBOARD */
+  .dash { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 22px; }
+  .card { background: var(--white); border: 1px solid var(--line); border-radius: 16px; padding: 20px 22px; transition: background 0.4s ease, border-color 0.4s ease, transform 0.3s ease; min-height: 124px; display: flex; flex-direction: column; }
+  .card-label { font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); font-weight: 600; margin-bottom: 10px; display: flex; align-items: center; gap: 7px; }
+  .card-greet { grid-column: span 2; justify-content: center; }
+  .greet-hi { font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 600; color: var(--taupe-dark); line-height: 1.15; }
+  .greet-date { font-size: 13px; color: var(--taupe-soft); margin-top: 8px; letter-spacing: 0.04em; }
+  .greet-quote { font-size: 12px; color: var(--taupe); margin-top: 10px; font-style: italic; font-family: 'Cormorant Garamond', serif; line-height: 1.5; opacity: 0.92; }
+
+  .wx-main { display: flex; align-items: baseline; gap: 6px; }
+  .wx-temp { font-family: 'Cormorant Garamond', serif; font-size: 38px; font-weight: 600; color: var(--taupe-dark); line-height: 1; }
+  .wx-emoji { font-size: 26px; }
+  .wx-desc { font-size: 13px; color: var(--taupe); margin-top: 8px; }
+  .wx-meta { font-size: 11px; color: var(--taupe-soft); margin-top: 6px; letter-spacing: 0.03em; }
+  .wx-loc { font-size: 10px; color: var(--taupe-soft); letter-spacing: 0.1em; margin-top: auto; padding-top: 8px; }
+
+  .aq-grid { display: flex; gap: 10px; margin-top: 2px; }
+  .aq-item { flex: 1; }
+  .aq-val { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 600; color: var(--taupe-dark); line-height: 1; }
+  .aq-unit { font-size: 10px; color: var(--taupe-soft); margin-left: 2px; }
+  .aq-name { font-size: 10px; color: var(--taupe-soft); letter-spacing: 0.05em; margin-bottom: 4px; }
+  .aq-badge { display: inline-block; font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 10px; margin-top: 10px; letter-spacing: 0.05em; }
+  .aq-good { background: rgba(120,170,120,0.18); color: #5d8a5d; }
+  .aq-normal { background: rgba(184,160,122,0.2); color: #9a8255; }
+  .aq-bad { background: rgba(214,140,90,0.2); color: #c4763e; }
+  .aq-vbad { background: rgba(200,92,92,0.2); color: #b85c5c; }
+
+  /* MEMO / TODO */
+  .card-memo { grid-column: span 4; flex-direction: row; gap: 32px; align-items: stretch; }
+  .memo-col { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+  .memo-col + .memo-col { border-left: 1px solid var(--line); padding-left: 32px; }
+  .todo-list { list-style: none; margin: 4px 0 10px; display: flex; flex-direction: column; gap: 7px; max-height: 150px; overflow-y: auto; }
+  .todo-item { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--ink); }
+  .todo-item input[type="checkbox"] { appearance: none; width: 17px; height: 17px; border: 1.5px solid var(--gold); border-radius: 5px; cursor: pointer; flex-shrink: 0; position: relative; transition: all 0.2s ease; }
+  .todo-item input[type="checkbox"]:checked { background: var(--gold); }
+  .todo-item input[type="checkbox"]:checked::after { content: '✓'; position: absolute; color: #fff; font-size: 11px; left: 2.5px; top: -1px; }
+  .todo-item.done span { text-decoration: line-through; color: var(--taupe-soft); }
+  .todo-text { flex: 1; cursor: pointer; }
+  .todo-del { background: none; border: none; color: var(--taupe-soft); cursor: pointer; font-size: 14px; opacity: 0; transition: opacity 0.2s ease; flex-shrink: 0; }
+  .todo-item:hover .todo-del { opacity: 0.7; }
+  .todo-del:hover { color: #b85c5c; opacity: 1; }
+  .todo-empty { font-size: 12px; color: var(--taupe-soft); font-style: italic; padding: 6px 0; }
+  .memo-add { display: flex; gap: 8px; margin-top: auto; }
+  .memo-add input { flex: 1; border: 1px solid var(--line); background: var(--cream); border-radius: 9px; padding: 9px 12px; font-family: inherit; font-size: 13px; color: var(--ink); outline: none; transition: border-color 0.2s ease; }
+  .memo-add input:focus { border-color: var(--gold); }
+  .memo-add button { border: none; background: var(--taupe-dark); color: var(--cream); border-radius: 9px; padding: 0 16px; cursor: pointer; font-family: inherit; font-size: 13px; transition: background 0.2s ease; }
+  .memo-add button:hover { background: var(--gold); color: #fff; }
+  .notice-area { width: 100%; flex: 1; border: 1px solid var(--line); background: var(--cream); border-radius: 9px; padding: 12px 14px; font-family: inherit; font-size: 13px; color: var(--ink); outline: none; resize: none; line-height: 1.7; min-height: 96px; transition: border-color 0.2s ease; }
+  .notice-area:focus { border-color: var(--gold); }
+  .saved-hint { font-size: 10px; color: var(--sage); letter-spacing: 0.05em; margin-top: 6px; height: 13px; opacity: 0; transition: opacity 0.3s ease; }
+  .saved-hint.show { opacity: 1; }
+
+  .searchbar { background: var(--white); border: 1px solid var(--line); border-radius: 14px; padding: 14px 22px; display: flex; align-items: center; gap: 12px; margin-bottom: 18px; transition: all 0.2s ease; }
+  .searchbar:focus-within { border-color: var(--gold); box-shadow: 0 0 0 4px rgba(184, 160, 122, 0.12); }
+  .searchbar-icon { font-size: 18px; color: var(--taupe-soft); }
+  .searchbar input { flex: 1; border: none; outline: none; font-family: inherit; font-size: 14px; background: transparent; color: var(--ink); }
+  .search-kbd { font-size: 10px; color: var(--taupe-soft); border: 1px solid var(--line); border-radius: 6px; padding: 3px 7px; letter-spacing: 0.05em; }
+
+  .toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+  .filter-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+  .chip { background: var(--white); border: 1px solid var(--line); color: var(--taupe); padding: 8px 16px; border-radius: 20px; font-size: 12px; cursor: pointer; transition: all 0.2s ease; font-family: inherit; }
+  .chip:hover { border-color: var(--gold); color: var(--taupe-dark); }
+  .chip.active { background: var(--taupe-dark); color: var(--cream); border-color: var(--taupe-dark); }
+  .result-count { font-size: 11px; color: var(--taupe-soft); letter-spacing: 0.05em; white-space: nowrap; }
+
+  .bento { display: grid; grid-template-columns: repeat(6, 1fr); grid-auto-rows: 180px; gap: 16px; }
+  .tile { border-radius: 18px; padding: 24px; text-decoration: none; color: inherit; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden; transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.35s ease, opacity 0.5s ease; border: 1px solid var(--line); cursor: pointer; opacity: 0; transform: translateY(14px); }
+  .tile.in { opacity: 1; transform: translateY(0); }
+  .tile:hover { transform: translateY(-4px) scale(1.01); box-shadow: var(--card-shadow); }
+  .tile::after { content: '↗'; position: absolute; top: 20px; right: 20px; font-size: 20px; opacity: 0.6; transition: all 0.3s ease; }
+  .tile:hover::after { opacity: 1; transform: translate(3px, -3px); }
+
+  .tile-lg { grid-column: span 3; grid-row: span 2; }
+  .tile-md { grid-column: span 3; }
+  .tile-sm { grid-column: span 2; }
+
+  .tile-dark { background: #3D362E; color: #F2EAD9; border-color: #3D362E; }
+  .tile-cream { background: var(--white); color: var(--ink); }
+  .tile-gold { background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%); color: #fff; border-color: transparent; }
+  .tile-rose { background: linear-gradient(135deg, var(--rose) 0%, #DBC1B3 100%); color: #fff; border-color: transparent; }
+  .tile-sage { background: linear-gradient(135deg, var(--sage) 0%, #C0CCB7 100%); color: #fff; border-color: transparent; }
+  .tile-deep { background: linear-gradient(135deg, var(--taupe) 0%, var(--taupe-soft) 100%); color: #F2EAD9; border-color: transparent; }
+
+  .tile-top { display: flex; align-items: center; gap: 10px; }
+  .tile-tag { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.85; padding: 4px 10px; background: rgba(255,255,255,0.18); border-radius: 12px; backdrop-filter: blur(8px); }
+  .tile-cream .tile-tag { background: var(--cream-deep); color: var(--taupe); }
+  .tile-title { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 600; line-height: 1.2; letter-spacing: 0.02em; }
+  .tile-lg .tile-title { font-size: 36px; }
+  .tile-sm .tile-title { font-size: 20px; font-family: 'Noto Sans KR', sans-serif; font-weight: 600; }
+  .tile-ko { font-size: 14px; margin-top: 4px; opacity: 0.9; }
+  .tile-lg .tile-ko { font-size: 16px; }
+  .tile-desc { font-size: 13px; opacity: 0.85; line-height: 1.6; margin-top: 8px; }
+  .tile-bottom { display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
+  .tile-url { font-size: 10px; letter-spacing: 0.05em; opacity: 0.7; font-family: 'Cormorant Garamond', serif; font-style: italic; }
+
+  .tile-feature { background: linear-gradient(135deg, var(--taupe-dark) 0%, var(--taupe) 100%); color: var(--cream); border-color: transparent; }
+  .tile-feature::before { content: 'BP'; position: absolute; right: -10px; bottom: -34px; font-family: 'Cormorant Garamond', serif; font-size: 170px; font-weight: 600; color: rgba(255,255,255,0.07); line-height: 1; pointer-events: none; }
+  .tile-feature .tile-title { font-size: 32px; position: relative; }
+
+  .no-results { display: none; text-align: center; padding: 50px 20px; color: var(--taupe-soft); font-size: 14px; }
+  .no-results.show { display: block; }
+  .no-results .nr-icon { font-size: 34px; opacity: 0.5; margin-bottom: 12px; }
+
+  .footer { text-align: center; margin-top: 40px; color: var(--taupe-soft); font-size: 12px; font-family: 'Cormorant Garamond', serif; font-style: italic; letter-spacing: 0.1em; }
+  .footer a { color: var(--taupe-soft); text-decoration: none; margin-left: 12px; font-size: 11px; }
+  .footer a:hover { color: var(--gold); }
+
+  @media (max-width: 900px) {
+    body { padding: 20px 16px 50px; }
+    .dash { grid-template-columns: repeat(2, 1fr); }
+    .card-greet { grid-column: span 2; }
+    .card-memo { grid-column: span 2; flex-direction: column; gap: 20px; }
+    .memo-col + .memo-col { border-left: none; padding-left: 0; border-top: 1px solid var(--line); padding-top: 18px; }
+    .bento { grid-template-columns: repeat(2, 1fr); }
+    .tile-lg, .tile-md, .tile-sm { grid-column: span 2; grid-row: span 1; }
+    .tile-lg { grid-row: span 2; }
+    .tile-lg .tile-title { font-size: 28px; }
+    .search-kbd { display: none; }
+  }
+  @media (max-width: 560px) {
+    .header { padding: 16px 18px; }
+    .header-title { font-size: 20px; }
+    .clock { display: none; }
+    .dash { grid-template-columns: 1fr; }
+    .card-greet { grid-column: span 1; }
+    .card-memo { grid-column: span 1; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tile { transition: opacity 0.2s ease; transform: none !important; }
+  }
+
+  /* PASSWORD GATE */
+  .gate { position: fixed; inset: 0; background: var(--cream); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 24px; }
+  .gate-card { background: var(--white); border: 1px solid var(--line); border-radius: 18px; padding: 48px 40px; width: 100%; max-width: 380px; text-align: center; box-shadow: 0 30px 60px -30px rgba(74, 65, 56, 0.25); }
+  .gate-logo { width: 110px; height: 110px; margin: 0 auto 24px; }
+  .gate-title { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 600; color: var(--taupe-dark); letter-spacing: 0.04em; margin-bottom: 4px; }
+  .gate-sub { font-size: 11px; color: var(--taupe-soft); letter-spacing: 0.3em; margin-bottom: 32px; }
+  .gate-form { display: flex; flex-direction: column; gap: 12px; }
+  .gate-label { font-size: 10px; letter-spacing: 0.3em; color: var(--gold); font-weight: 600; text-align: left; margin-bottom: 2px; }
+  .gate-input { width: 100%; padding: 14px 18px; border: 1px solid var(--line); border-radius: 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 16px; color: var(--ink); background: var(--cream); outline: none; text-align: center; letter-spacing: 0.5em; transition: all 0.2s ease; }
+  .gate-input:focus { border-color: var(--gold); box-shadow: 0 0 0 4px rgba(184, 160, 122, 0.15); background: var(--white); }
+  .gate-btn { margin-top: 8px; padding: 14px; background: var(--taupe-dark); color: var(--cream); border: none; border-radius: 10px; font-family: inherit; font-size: 13px; letter-spacing: 0.2em; cursor: pointer; transition: background 0.2s ease; }
+  .gate-btn:hover { background: var(--gold); color: var(--white); }
+  .gate-err { color: #B85C5C; font-size: 12px; margin-top: 6px; min-height: 16px; opacity: 0; transition: opacity 0.2s ease; }
+  .gate-err.show { opacity: 1; }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 20%,60% { transform: translateX(-6px); } 40%,80% { transform: translateX(6px); } }
+  .gate-card.shake { animation: shake 0.35s ease; }
+</style>
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+<div id="gate" class="gate" style="display:none;">
+  <div class="gate-card">
+    <svg class="gate-logo emblem" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-label="Beauty Park">
+      <circle cx="50" cy="50" r="48" style="fill:var(--white);stroke:var(--gold);stroke-width:1.5"/>
+      <circle cx="50" cy="50" r="41" style="fill:none;stroke:var(--line);stroke-width:0.75"/>
+      <text x="50" y="62" text-anchor="middle" style="fill:var(--taupe-dark);font-family:'Cormorant Garamond',serif;font-size:38px;font-weight:600;letter-spacing:1px">BP</text>
+    </svg>
+    <div class="gate-title">뷰티파크 허브</div>
+    <div class="gate-sub">B E A U T Y · P A R K · H U B</div>
+    <form id="gate-form" class="gate-form" autocomplete="off">
+      <label for="gate-input" class="gate-label">PASSWORD</label>
+      <input type="password" id="gate-input" class="gate-input" autocomplete="off" autofocus>
+      <button type="submit" class="gate-btn">Enter</button>
+      <div id="gate-err" class="gate-err">비밀번호가 올바르지 않습니다.</div>
+    </form>
+  </div>
+</div>
+
+<div class="wrap" id="hub" style="visibility:hidden;">
+
+  <header class="header">
+    <div class="header-left">
+      <svg class="header-logo emblem" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-label="뷰티파크 허브">
+        <circle cx="50" cy="50" r="48" style="fill:var(--white);stroke:var(--gold);stroke-width:2"/>
+        <circle cx="50" cy="50" r="41" style="fill:none;stroke:var(--line);stroke-width:1"/>
+        <text x="50" y="63" text-anchor="middle" style="fill:var(--taupe-dark);font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:600;letter-spacing:1px">BP</text>
+      </svg>
+      <div>
+        <div class="header-title">뷰티파크 허브</div>
+        <div class="header-sub">B E A U T Y · P A R K · H U B</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="clock">
+        <div id="clock-time">—</div>
+        <div class="clock-date" id="clock-date">—</div>
+      </div>
+      <button id="theme-btn" class="icon-btn" title="다크모드 전환" aria-label="다크모드 전환">☾</button>
+    </div>
+  </header>
+
+  <!-- OPERATIONS DASHBOARD -->
+  <div class="dash">
+    <div class="card card-greet">
+      <div class="greet-hi" id="greet-hi">안녕하세요</div>
+      <div class="greet-date" id="greet-date">—</div>
+      <div class="greet-quote" id="greet-quote">—</div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">☁ 날씨 · 대구 범어</div>
+      <div class="wx-main">
+        <span class="wx-emoji" id="wx-emoji">⛅</span>
+        <span class="wx-temp" id="wx-temp">—</span>
+      </div>
+      <div class="wx-desc" id="wx-desc">불러오는 중…</div>
+      <div class="wx-meta" id="wx-meta"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">✦ 미세먼지 · 대구</div>
+      <div class="aq-grid">
+        <div class="aq-item">
+          <div class="aq-name">미세먼지 PM10</div>
+          <div><span class="aq-val" id="aq-pm10">—</span></div>
+        </div>
+        <div class="aq-item">
+          <div class="aq-name">초미세 PM2.5</div>
+          <div><span class="aq-val" id="aq-pm25">—</span></div>
+        </div>
+      </div>
+      <div><span class="aq-badge aq-normal" id="aq-badge">측정 중…</span></div>
+    </div>
+
+    <div class="card card-memo">
+      <div class="memo-col">
+        <div class="card-label">✓ 오늘 할 일</div>
+        <ul class="todo-list" id="todo-list"></ul>
+        <div class="memo-add">
+          <input type="text" id="todo-input" placeholder="할 일 추가 후 Enter" maxlength="80">
+          <button id="todo-add">추가</button>
+        </div>
+      </div>
+      <div class="memo-col">
+        <div class="card-label">✎ 메모 · 공지</div>
+        <textarea class="notice-area" id="notice" placeholder="예: 오늘 13시 전체회의 / 거래처 입금 확인 / 예약 특이사항…"></textarea>
+        <div class="saved-hint" id="notice-saved">저장되었습니다</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="searchbar">
+    <span class="searchbar-icon">⌕</span>
+    <input type="text" id="search" placeholder="시스템 검색 (예: 매출, CRM, 재고...)">
+    <span class="search-kbd" id="search-kbd">/</span>
+  </div>
+
+  <div class="toolbar">
+    <div class="filter-chips">
+      <button class="chip active" data-cat="all">전체</button>
+      <button class="chip" data-cat="checklist">원장 업무</button>
+      <button class="chip" data-cat="sales">매출·경영</button>
+      <button class="chip" data-cat="hr">채용·인사</button>
+      <button class="chip" data-cat="crm">고객관리</button>
+      <button class="chip" data-cat="marketing">마케팅</button>
+      <button class="chip" data-cat="consult">진료·상담</button>
+      <button class="chip" data-cat="inventory">재고·물품</button>
+      <button class="chip" data-cat="meetings">회의</button>
+    </div>
+    <div class="result-count" id="result-count"></div>
+  </div>
+
+  <div class="bento" id="bento">
+
+    <a href="https://beautypark-checklist.vercel.app" target="_blank" rel="noopener" class="tile tile-lg tile-feature" data-cat="checklist" data-search="체크리스트 원장 checklist daily 대표">
+      <div class="tile-top">
+        <span class="tile-tag">Director · Daily</span>
+      </div>
+      <div>
+        <div class="tile-title">Today's Checklist</div>
+        <div class="tile-ko">대표원장 업무 체크리스트</div>
+        <div class="tile-desc">오늘의 점검 항목과 운영 체크포인트를 한 곳에서 확인합니다.</div>
+      </div>
+      <div class="tile-bottom">
+        <div class="tile-url">beautypark-checklist.vercel.app</div>
+      </div>
+    </a>
+
+    <a href="https://beauty-park-sales.vercel.app/" target="_blank" rel="noopener" class="tile tile-md tile-gold" data-cat="sales" data-search="매출 sales 보고">
+      <div class="tile-top">
+        <span class="tile-tag">Sales Report</span>
+      </div>
+      <div>
+        <div class="tile-title">Sales Insight</div>
+        <div class="tile-ko">매출 보고 사이트</div>
+      </div>
+      <div class="tile-bottom">
+        <div class="tile-url">beauty-park-sales.vercel.app</div>
+      </div>
+    </a>
+
+    <a href="https://beautypark-incentive.vercel.app" target="_blank" rel="noopener" class="tile tile-md tile-dark" data-cat="sales" data-search="급여 인센티브 payroll incentive">
+      <div class="tile-top">
+        <span class="tile-tag">Incentive</span>
+      </div>
+      <div>
+        <div class="tile-title">Payroll Studio</div>
+        <div class="tile-ko">급여 · 인센티브 계산기</div>
+      </div>
+      <div class="tile-bottom">
+        <div class="tile-url">beautypark-incentive.vercel.app</div>
+      </div>
+    </a>
+
+    <a href="https://beautypark-interview.vercel.app" target="_blank" rel="noopener" class="tile tile-sm tile-deep" data-cat="hr" data-search="채용 면접 인사 interview recruit hr">
+      <div class="tile-top">
+        <span class="tile-tag">Interview</span>
+      </div>
+      <div>
+        <div class="tile-title">Interview Room</div>
+        <div class="tile-ko">채용면접</div>
+      </div>
+      <div class="tile-bottom">
+        <div class="tile-url">beautypark-interview.vercel.app</div>
+      </div>
+    </a>
+
+    <a href="https://beautypark-evaluation.vercel.app" target="_blank" rel="noopener" class="tile tile-sm tile-rose" data-cat="hr" data-search="평가 근무평가 인사평가 인사 직원 evaluation review hr">
+      <div class="tile-top">
+        <span class="tile-tag">Evaluation</span>
+      </div>
+      <div>
+        <div class="tile-title">Staff Review</div>
+        <div class="tile-ko">직원 근무평가</div>
+      </div>
+      <div class="tile-bottom">
+        <div class="tile-url">beautypark-evaluation.vercel.app</div>
+      </div>
+    </a>
+
+    <a href="https://beautypark-director.vercel.app/" target="_blank" rel="noopener" class="tile tile-sm tile-dark" data-cat="checklist" data-search="총괄 실장 director portal 토탈 종합 포털">
+      <div class="tile-top">
+        <span class="tile-tag">Director · 💛</span>
+      </div>
+      <div>
+        <div class="tile-title">Director</div>
+        <div class="tile-ko">총괄 실장 포털</div>
+      </div>
+      <div class="tile-bottom">
+        <div class="tile-url">beautypark-director.vercel.app</div>
+      </div>
+    </a>
+
+    <a href="https://beautypark-desk-training.vercel.app/" target="_blank" rel="noopener" class="tile tile-sm tile-rose" data-cat="hr" data-search="트레이닝 training 코디네이터 신규 교육 체크리스트 데스크">
+      <div class="tile-top">
+        <span class="tile-tag">Desk</span>
+      </div>
+      <div>
+        <div class="tile-title">Desk Training</div>
+        <div class="tile-ko">코디 트레이닝</div>
+      </div>
+      <div class="tile-bottom">
+        <div class="tile-url">beautypark-desk-training.vercel.app</div>
+      </div>
+    </a>
+
+    <a href="https://beautypark-nurse-training.vercel.app/" target="_blank" rel="noopener" class="tile tile-sm tile-cream" data-cat="hr" data-search="트레이닝 training 간호 어시 어시스턴트 교육 체크리스트 nurse">
+      <div class="tile-top">
+        <span class="tile-tag">Nurse</span>
+      </div>
+      <div>
+        <div class="tile-title">Nurse Training</div>
+        <div class="tile-ko">어시팀 교육</div>
+      </div>
+      <div class="tile-bottom">
+        <div class="tile-url">beautypark-nurse-training.vercel.app</div>
+      </div>
+    </a>
+
+    <a href="https://beautypark-skincare-training.vercel.app/" target="_blank" rel="noopener" class="tile tile-sm tile-sage" data-cat="hr" data-search="트레이닝 training 피부 피부팀 관리 체크리스트 skincare">
+      <div class="tile-top">
+        <span class="tile-tag">Skincare</span>
+      </div>
+      <div>
+        <div class="tile-title">Skincare Training</div>
+        <div class="tile-ko">피부팀 관리</div>
+      </div>
+      <div class="tile-bottom">
+        <div class="tile-url">beautypark-skincare-training.vercel.app</div>
+      </div>
+    </a>
+
+    <a href="https://beautypark-librarylab.vercel.app/" target="_blank" rel="noopener" class="tile tile-sm tile-sage" data-cat="inventory" data-search="라이브러리랩 library lab 운영 대시보드">
+      <div class="tile-top">
+        <span class="tile-tag">Library Lab</span>
+      </div>
+      <div>
+        <div class="tile-title">Library Lab</div>
+        <div class="tile-ko">라이브러리랩</div>
+      </div>
+      <div class="tile-bottom">
+        <div class="tile-url">beautypark-librarylab.vercel.app</div>
+      </div>
+    </a>
+
+    <a href="https://beautypark-crm.vercel.app/" target="_blank" rel="noopener" class="tile tile-sm tile-cream" data-cat="crm" data-search="CRM 고객">
+      <div class="tile-top">
+        <span class="tile-tag">CRM</span>
+      </div>
+      <div>
+        <div class="tile-title">Client Records</div>
+        <div class="tile-ko">CRM 백업</div>
+      </div>
+      <div class="tile-bottom">
+        <div class="tile-url">beautypark-crm.vercel.app</div>
+      </div>
+    </a>
+
+    <a href="https://bp-experience.vercel.app" target="_blank" rel="noopener" class="tile tile-sm tile-gold" data-cat="marketing" data-search="체험단 marketing experience 마케팅 홍보 후기 리뷰">
+      <div class="tile-top">
+        <span class="tile-tag">Experience</span>
+      </div>
+      <div>
+        <div class="tile-title">Trial Group</div>
+        <div class="tile-ko">체험단 관리</div>
+      </div>
+      <div class="tile-bottom">
+        <div class="tile-url">bp-experience.vercel.app</div>
+      </div>
+    </a>
+
+    <a href="https://sns-pi-sand.vercel.app/" target="_blank" rel="noopener" class="tile tile-sm tile-deep" data-cat="marketing" data-search="SNS automation 자동화 sns 마케팅 인스타 페이스북">
+      <div class="tile-top">
+        <span class="tile-tag">SNS</span>
+      </div>
+      <div>
+        <div class="tile-title">SNS Auto</div>
+        <div class="tile-ko">SNS 자동화</div>
+      </div>
+      <div class="tile-bottom">
+        <div class="tile-url">sns-pi-sand.vercel.app</div>
+      </div>
+    </a>
+
+    <a href="https://bpconsultation2025-blip.github.io/beauty-park-translator/consultation-translator.html" target="_blank" rel="noopener" class="tile tile-sm tile-rose" data-cat="consult" data-search="통역 translator 상담">
+      <div class="tile-top">
+        <span class="tile-tag">Translator</span>
+      </div>
+      <div>
+        <div class="tile-title">Consult Bridge</div>
+        <div class="tile-ko">상담 통역기</div>
+      </div>
+      <div class="tile-bottom">
+        <div class="tile-url">bpconsultation2025-blip.github.io</div>
+      </div>
+    </a>
+
+    <a href="https://login.ecount.com/" target="_blank" rel="noopener" class="tile tile-sm tile-sage" data-cat="inventory" data-search="재고 ecount inventory">
+      <div class="tile-top">
+        <span class="tile-tag">ECOUNT</span>
+      </div>
+      <div>
+        <div class="tile-title">Inventory</div>
+        <div class="tile-ko">재고 관리</div>
+      </div>
+      <div class="tile-bottom">
+        <div class="tile-url">login.ecount.com</div>
+      </div>
+    </a>
+
+    <a href="https://beautypark-dashboard.vercel.app/" target="_blank" rel="noopener" class="tile tile-sm tile-cream" data-cat="inventory" data-search="구매요청 dashboard 물품 화장품 purchase order 구매">
+      <div class="tile-top">
+        <span class="tile-tag">Purchase</span>
+      </div>
+      <div>
+        <div class="tile-title">Order Board</div>
+        <div class="tile-ko">구매요청 대시보드</div>
+      </div>
+      <div class="tile-bottom">
+        <div class="tile-url">beautypark-dashboard.vercel.app</div>
+      </div>
+    </a>
+
+    <a href="https://beautypark-meeting-bpconsultation2025-6801s-projects.vercel.app" target="_blank" rel="noopener" class="tile tile-sm tile-deep" data-cat="meetings" data-search="회의 미팅 monthly meeting 상담팀 간호팀 피부팀">
+      <div class="tile-top">
+        <span class="tile-tag">Monthly</span>
+      </div>
+      <div>
+        <div class="tile-title">Meeting Hub</div>
+        <div class="tile-ko">월간 회의 종합</div>
+      </div>
+      <div class="tile-bottom">
+        <div class="tile-url">beautypark-meeting…vercel.app</div>
+      </div>
+    </a>
+
+  </div>
+
+  <div class="no-results" id="no-results">
+    <div class="nr-icon">⌕</div>
+    <div>검색 결과가 없습니다.</div>
+  </div>
+
+  <div class="footer">— 뷰티파크 허브 · Beauty Park Beomeo · 2026 — <a href="#" id="lock-btn">🔒 잠그기</a></div>
+
+</div>
+
+<script>
+  // ---------- PASSWORD GATE ----------
+  var HASH = '161bf90773b9c06ec22b1c7e24d8ca526415fe33d59b0ee28568bed98f34ae82';
+  var KEY = 'bp-hub-unlocked-v1';
+  var gate = document.getElementById('gate');
+  var hub = document.getElementById('hub');
+  var form = document.getElementById('gate-form');
+  var input = document.getElementById('gate-input');
+  var err = document.getElementById('gate-err');
+
+  async function sha256(text) {
+    var buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+    return Array.from(new Uint8Array(buf)).map(function(b){ return b.toString(16).padStart(2,'0'); }).join('');
+  }
+  function unlock() {
+    gate.style.display = 'none';
+    hub.style.visibility = 'visible';
+    revealTiles();
+  }
+  if (localStorage.getItem(KEY) === HASH) {
+    unlock();
+  } else {
+    gate.style.display = 'flex';
+    setTimeout(function(){ input && input.focus(); }, 50);
+  }
+  if (form) {
+    form.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      var h = await sha256(input.value);
+      if (h === HASH) {
+        localStorage.setItem(KEY, HASH);
+        unlock();
+      } else {
+        err.classList.add('show');
+        var card = document.querySelector('.gate-card');
+        card.classList.remove('shake');
+        void card.offsetWidth;
+        card.classList.add('shake');
+        input.value = '';
+        input.focus();
+      }
+    });
+  }
+
+  var lockBtn = document.getElementById('lock-btn');
+  if (lockBtn) {
+    lockBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      localStorage.removeItem(KEY);
+      location.reload();
+    });
+  }
+
+  // ---------- THEME (DARK MODE) ----------
+  var THEME_KEY = 'bp-hub-theme-v1';
+  var themeBtn = document.getElementById('theme-btn');
+  function applyTheme(t) {
+    document.documentElement.setAttribute('data-theme', t);
+    themeBtn.textContent = t === 'dark' ? '☀' : '☾';
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', t === 'dark' ? '#1B1916' : '#F5EFE6');
+  }
+  var savedTheme = localStorage.getItem(THEME_KEY);
+  if (!savedTheme) {
+    savedTheme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+  }
+  applyTheme(savedTheme);
+  themeBtn.addEventListener('click', function() {
+    var next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    localStorage.setItem(THEME_KEY, next);
+    applyTheme(next);
+  });
+
+  // ---------- CLOCK + GREETING ----------
+  var DAYS = ['일','월','화','수','목','금','토'];
+  var QUOTES = [
+    '작은 디테일이 모여 신뢰가 됩니다.',
+    '오늘도 한 분 한 분께 정성을 더합니다.',
+    '준비된 하루가 여유로운 하루를 만듭니다.',
+    '고객의 아름다움이 우리의 자부심입니다.',
+    '꾸준함이 최고의 경쟁력입니다.',
+    '친절은 가장 확실한 마케팅입니다.'
+  ];
+  function greetWord(h) {
+    if (h < 6) return '늦은 밤이에요';
+    if (h < 11) return '좋은 아침입니다';
+    if (h < 14) return '활기찬 점심이에요';
+    if (h < 18) return '나른한 오후네요';
+    if (h < 22) return '편안한 저녁입니다';
+    return '고생 많으셨어요';
+  }
+  function updateClock() {
+    var d = new Date();
+    var hh = String(d.getHours()).padStart(2,'0');
+    var mm = String(d.getMinutes()).padStart(2,'0');
+    var ct = document.getElementById('clock-time');
+    var cd = document.getElementById('clock-date');
+    if (ct) ct.textContent = hh + ':' + mm;
+    if (cd) cd.textContent = (d.getMonth()+1) + '.' + d.getDate() + ' (' + DAYS[d.getDay()] + ')';
+    var gh = document.getElementById('greet-hi');
+    var gd = document.getElementById('greet-date');
+    if (gh) gh.textContent = greetWord(d.getHours());
+    if (gd) gd.textContent = d.getFullYear() + '년 ' + (d.getMonth()+1) + '월 ' + d.getDate() + '일 ' + DAYS[d.getDay()] + '요일';
+  }
+  updateClock();
+  setInterval(updateClock, 30000);
+  (function(){
+    var q = document.getElementById('greet-quote');
+    if (q) q.textContent = '“' + QUOTES[new Date().getDate() % QUOTES.length] + '”';
+  })();
+
+  // ---------- WEATHER (대구 범어, Open-Meteo, no key) ----------
+  var LAT = 35.8575, LON = 128.6286;
+  function wxInfo(code) {
+    if (code === 0) return ['☀️','맑음'];
+    if (code === 1) return ['🌤️','대체로 맑음'];
+    if (code === 2) return ['⛅','구름 조금'];
+    if (code === 3) return ['☁️','흐림'];
+    if (code === 45 || code === 48) return ['🌫️','안개'];
+    if (code >= 51 && code <= 57) return ['🌦️','이슬비'];
+    if (code >= 61 && code <= 67) return ['🌧️','비'];
+    if (code >= 71 && code <= 77) return ['🌨️','눈'];
+    if (code >= 80 && code <= 82) return ['🌧️','소나기'];
+    if (code >= 85 && code <= 86) return ['🌨️','소나기눈'];
+    if (code >= 95) return ['⛈️','뇌우'];
+    return ['⛅','—'];
+  }
+  function loadWeather() {
+    var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + LAT + '&longitude=' + LON +
+      '&current=temperature_2m,apparent_temperature,relative_humidity_2m,weather_code' +
+      '&daily=temperature_2m_max,temperature_2m_min&timezone=Asia%2FSeoul';
+    fetch(url).then(function(r){ return r.json(); }).then(function(j){
+      var c = j.current, day = j.daily;
+      var info = wxInfo(c.weather_code);
+      document.getElementById('wx-emoji').textContent = info[0];
+      document.getElementById('wx-temp').textContent = Math.round(c.temperature_2m) + '°';
+      document.getElementById('wx-desc').textContent = info[1] + ' · 체감 ' + Math.round(c.apparent_temperature) + '°';
+      var hi = Math.round(day.temperature_2m_max[0]);
+      var lo = Math.round(day.temperature_2m_min[0]);
+      document.getElementById('wx-meta').textContent = '최고 ' + hi + '° / 최저 ' + lo + '° · 습도 ' + c.relative_humidity_2m + '%';
+    }).catch(function(){
+      document.getElementById('wx-desc').textContent = '날씨를 불러올 수 없습니다';
+      document.getElementById('wx-meta').textContent = '';
+    });
+  }
+
+  // ---------- AIR QUALITY (대구, Open-Meteo) ----------
+  function pm25Grade(v) {
+    if (v <= 15) return ['좋음','aq-good'];
+    if (v <= 35) return ['보통','aq-normal'];
+    if (v <= 75) return ['나쁨','aq-bad'];
+    return ['매우나쁨','aq-vbad'];
+  }
+  function loadAir() {
+    var url = 'https://air-quality-api.open-meteo.com/v1/air-quality?latitude=' + LAT + '&longitude=' + LON +
+      '&current=pm10,pm2_5&timezone=Asia%2FSeoul';
+    fetch(url).then(function(r){ return r.json(); }).then(function(j){
+      var c = j.current;
+      var pm10 = Math.round(c.pm10), pm25 = Math.round(c.pm2_5);
+      document.getElementById('aq-pm10').innerHTML = pm10 + '<span class="aq-unit">㎍</span>';
+      document.getElementById('aq-pm25').innerHTML = pm25 + '<span class="aq-unit">㎍</span>';
+      var g = pm25Grade(pm25);
+      var badge = document.getElementById('aq-badge');
+      badge.textContent = '초미세먼지 ' + g[0];
+      badge.className = 'aq-badge ' + g[1];
+    }).catch(function(){
+      document.getElementById('aq-badge').textContent = '불러올 수 없음';
+    });
+  }
+  loadWeather();
+  loadAir();
+  setInterval(loadWeather, 30 * 60 * 1000);
+  setInterval(loadAir, 30 * 60 * 1000);
+
+  // ---------- TODO ----------
+  var TODO_KEY = 'bp-hub-todos-v1';
+  var todoList = document.getElementById('todo-list');
+  var todoInput = document.getElementById('todo-input');
+  function getTodos() { try { return JSON.parse(localStorage.getItem(TODO_KEY)) || []; } catch(e){ return []; } }
+  function saveTodos(t) { localStorage.setItem(TODO_KEY, JSON.stringify(t)); }
+  function renderTodos() {
+    var todos = getTodos();
+    todoList.innerHTML = '';
+    if (!todos.length) {
+      var li = document.createElement('li');
+      li.className = 'todo-empty';
+      li.textContent = '오늘의 할 일을 적어보세요.';
+      todoList.appendChild(li);
+      return;
+    }
+    todos.forEach(function(item, i) {
+      var li = document.createElement('li');
+      li.className = 'todo-item' + (item.done ? ' done' : '');
+      var cb = document.createElement('input');
+      cb.type = 'checkbox'; cb.checked = item.done;
+      cb.addEventListener('change', function(){ var t = getTodos(); t[i].done = cb.checked; saveTodos(t); renderTodos(); });
+      var span = document.createElement('span');
+      span.className = 'todo-text'; span.textContent = item.text;
+      span.addEventListener('click', function(){ cb.checked = !cb.checked; cb.dispatchEvent(new Event('change')); });
+      var del = document.createElement('button');
+      del.className = 'todo-del'; del.innerHTML = '×'; del.title = '삭제';
+      del.addEventListener('click', function(){ var t = getTodos(); t.splice(i,1); saveTodos(t); renderTodos(); });
+      li.appendChild(cb); li.appendChild(span); li.appendChild(del);
+      todoList.appendChild(li);
+    });
+  }
+  function addTodo() {
+    var v = todoInput.value.trim();
+    if (!v) return;
+    var t = getTodos(); t.push({ text: v, done: false }); saveTodos(t);
+    todoInput.value = ''; renderTodos();
+  }
+  document.getElementById('todo-add').addEventListener('click', addTodo);
+  todoInput.addEventListener('keydown', function(e){ if (e.key === 'Enter') addTodo(); });
+  renderTodos();
+
+  // ---------- NOTICE / MEMO ----------
+  var NOTICE_KEY = 'bp-hub-notice-v1';
+  var notice = document.getElementById('notice');
+  var noticeSaved = document.getElementById('notice-saved');
+  notice.value = localStorage.getItem(NOTICE_KEY) || '';
+  var saveTimer;
+  notice.addEventListener('input', function(){
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(function(){
+      localStorage.setItem(NOTICE_KEY, notice.value);
+      noticeSaved.classList.add('show');
+      setTimeout(function(){ noticeSaved.classList.remove('show'); }, 1500);
+    }, 500);
+  });
+
+  // ---------- FILTER + SEARCH ----------
+  var search = document.getElementById('search');
+  var activeCat = 'all';
+  var tiles = document.querySelectorAll('.tile');
+  var resultCount = document.getElementById('result-count');
+  var noResults = document.getElementById('no-results');
+
+  function applyFilter() {
+    var q = search.value.trim().toLowerCase();
+    var shown = 0;
+    tiles.forEach(function(t) {
+      var matchCat = activeCat === 'all' || t.dataset.cat === activeCat;
+      var text = (t.textContent + ' ' + (t.dataset.search||'')).toLowerCase();
+      var matchQ = !q || text.includes(q);
+      var visible = matchCat && matchQ;
+      t.style.display = visible ? '' : 'none';
+      if (visible) shown++;
+    });
+    resultCount.textContent = shown + '개 시스템';
+    noResults.classList.toggle('show', shown === 0);
+  }
+
+  search.addEventListener('input', applyFilter);
+  document.querySelectorAll('.chip').forEach(function(chip) {
+    chip.addEventListener('click', function() {
+      document.querySelectorAll('.chip').forEach(function(c){ c.classList.remove('active'); });
+      chip.classList.add('active');
+      activeCat = chip.dataset.cat;
+      applyFilter();
+    });
+  });
+  applyFilter();
+
+  // ---------- KEYBOARD SHORTCUTS ----------
+  document.addEventListener('keydown', function(e) {
+    if ((e.key === '/' || ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k')) &&
+        document.activeElement !== search && hub.style.visibility === 'visible') {
+      e.preventDefault();
+      search.focus();
+    } else if (e.key === 'Escape' && document.activeElement === search) {
+      search.value = '';
+      applyFilter();
+      search.blur();
+    }
+  });
+
+  // ---------- TILE ENTRANCE ANIMATION ----------
+  function revealTiles() {
+    var visible = Array.prototype.filter.call(tiles, function(t){ return t.style.display !== 'none'; });
+    visible.forEach(function(t, i) {
+      setTimeout(function(){ t.classList.add('in'); }, 40 * i);
+    });
+  }
+  if (hub.style.visibility === 'visible') revealTiles();
+</script>
+
+</body>
+</html>
