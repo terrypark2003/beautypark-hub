@@ -856,10 +856,15 @@
   });
 
   // ---------- TILE ENTRANCE ANIMATION ----------
+  // NOTE: query .tile fresh here so this is safe even when unlock() calls it
+  // early (before the `tiles` variable above has been assigned).
   function revealTiles() {
-    var visible = Array.prototype.filter.call(tiles, function(t){ return t.style.display !== 'none'; });
-    visible.forEach(function(t, i) {
-      setTimeout(function(){ t.classList.add('in'); }, 40 * i);
+    var nodes = document.querySelectorAll('.tile');
+    var shown = 0;
+    Array.prototype.forEach.call(nodes, function(t) {
+      if (t.style.display === 'none') return;
+      var delay = 40 * shown++;
+      setTimeout(function(){ t.classList.add('in'); }, delay);
     });
   }
   if (hub.style.visibility === 'visible') revealTiles();
